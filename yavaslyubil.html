@@ -1,118 +1,199 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Pushkin's Poem: Я вас любил</title>
+		<title>Poem Reader</title>
 		<style>
 			body {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				height: 100vh;
+				margin: 0;
+				background-color: #1a1a1a;
 				font-family: "Georgia", serif;
-				line-height: 1.6;
-				max-width: 800px;
-				margin: 0 auto;
-				padding: 20px;
-				background-color: #f9f4e8;
-				color: #333;
+				color: #f0f0f0;
+				transition: background-color 0.5s;
 			}
-			h1 {
+			#poem-container {
 				text-align: center;
-				color: #5a3921;
-				border-bottom: 1px solid #d4a76a;
-				padding-bottom: 10px;
+				max-width: 90%;
 			}
-			.poem-container {
-				background-color: #fff;
-				padding: 30px;
-				border-radius: 8px;
-				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-				margin-top: 20px;
+			#poem-phrase {
+				font-size: 4.5rem;
+				line-height: 1.3;
+				margin: 20px;
+				min-height: 200px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 			}
-			.original {
-				font-style: italic;
-				margin-bottom: 30px;
-				color: #5a3921;
-			}
-			.translation {
-				margin-bottom: 30px;
-			}
-			.word-by-word {
-				background-color: #f0e6d2;
-				padding: 15px;
-				border-left: 4px solid #d4a76a;
-				font-size: 0.9em;
-			}
-			footer {
+			#controls {
+				position: fixed;
+				bottom: 30px;
+				width: 100%;
 				text-align: center;
-				margin-top: 30px;
-				font-size: 0.9em;
-				color: #777;
+			}
+			button {
+				padding: 12px 25px;
+				font-size: 1.2rem;
+				cursor: pointer;
+				background-color: #4caf50;
+				color: white;
+				border: none;
+				border-radius: 30px;
+				margin: 0 10px;
+				transition: all 0.3s;
+				box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+			}
+			button:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+			}
+			#pause-btn {
+				background-color: #ff9800;
+			}
+			#restart-btn {
+				background-color: #2196f3;
+				display: none;
+			}
+			.progress-container {
+				width: 80%;
+				height: 6px;
+				background: #333;
+				margin: 30px auto;
+				border-radius: 3px;
+			}
+			#progress-bar {
+				height: 100%;
+				background: #4caf50;
+				width: 0%;
+				border-radius: 3px;
+				transition: width 0.1s linear;
 			}
 		</style>
 	</head>
 	<body>
-		<h1>Alexander Pushkin: "Я вас любил"</h1>
-
-		<div class="poem-container">
-			<div class="original">
-				<h2>Original (Russian)</h2>
-				<p>
-					Я вас любил: любовь ещё, быть может,<br />
-					В душе моей угасла не совсем;<br />
-					Но пусть она вас больше не тревожит;<br />
-					Я не хочу печалить вас ничем.
-				</p>
-
-				<p>
-					Я вас любил безмолвно, безнадежно,<br />
-					То робостью, то ревностью томим;<br />
-					Я вас любил так искренно, так нежно,<br />
-					Как дай вам Бог любимой быть другим.
-				</p>
-			</div>
-
-			<div class="translation">
-				<h2>English Translation</h2>
-				<p>
-					I loved you once: that love, perhaps,<br />
-					Has not yet died within my soul;<br />
-					But let it trouble you no more,<br />
-					I would not bring you any sorrow.
-				</p>
-
-				<p>
-					I loved you silently, hopelessly,<br />
-					Tormented now by shyness, now by jealousy;<br />
-					I loved you so sincerely, so tenderly,<br />
-					May God grant you to be loved that way by another.
-				</p>
-			</div>
-
-			<div class="word-by-word">
-				<h3>Word-by-Word Translation</h3>
-				<p>
-					<strong>Я вас любил</strong> – I you loved<br />
-					<strong>любовь ещё, быть может,</strong> – love still, perhaps<br />
-					<strong>В душе моей угасла не совсем;</strong> – In my soul
-					extinguished not completely;<br />
-					<strong>Но пусть она вас больше не тревожит;</strong> – But let it you
-					no longer disturb;<br />
-					<strong>Я не хочу печалить вас ничем.</strong> – I do not want to
-					sadden you with anything.
-				</p>
-
-				<p>
-					<strong>Я вас любил безмолвно, безнадежно,</strong> – I you loved
-					silently, hopelessly,<br />
-					<strong>То робостью, то ревностью томим;</strong> – Now by shyness,
-					now by jealousy tormented;<br />
-					<strong>Я вас любил так искренно, так нежно,</strong> – I you loved so
-					sincerely, so tenderly,<br />
-					<strong>Как дай вам Бог любимой быть другим.</strong> – As may God
-					grant you to be loved by another.
-				</p>
+		<div id="poem-container">
+			<div id="poem-phrase">Press Start to begin</div>
+			<div class="progress-container">
+				<div id="progress-bar"></div>
 			</div>
 		</div>
+		<div id="controls">
+			<button id="start-btn">Start Reading</button>
+			<button id="pause-btn" style="display: none">Pause</button>
+			<button id="restart-btn">Restart</button>
+		</div>
 
-		<footer>webpage made by iskander arbi</footer>
+		<script>
+			const poem = [
+				{ text: "    kk", delay: 5000 },
+				{ text: "Я вас любил", delay: 3200 }, // Original: 1200 + 2000
+				{ text: "любовь ещё, быть может,", delay: 6000 }, // Extended longer phrase
+				{ text: "В душе моей", delay: 2500 },
+				{ text: "угасла не совсем", delay: 5000 },
+				{ text: "Но пусть она вас больше не тревожит", delay: 7000 }, // Extended longer phrase
+				{ text: "Я не хочу", delay: 3000 },
+				{ text: "печалить вас", delay: 3500 }, // Slightly extended
+				{ text: "ничем", delay: 5000 },
+				{ text: "Я вас любил", delay: 3500 }, // Slightly extended
+				{ text: "безмолвно", delay: 3500 },
+				{ text: "безнадежно", delay: 3500 },
+				{ text: "То робостью ;", delay: 3500 },
+				{ text: "то ревностью томим", delay: 3500 }, // Extended longer phrase
+				{ text: "Я вас любил", delay: 4500 }, // Extended
+				{ text: "так искренно", delay: 4000 },
+				{ text: "так нежно", delay: 4500 },
+				{ text: "Как дай вам Бог", delay: 3500 },
+				{ text: "любимой быть", delay: 4500 },
+				{ text: "другим", delay: 3000 },
+			];
+
+			const phraseElement = document.getElementById("poem-phrase");
+			const startBtn = document.getElementById("start-btn");
+			const pauseBtn = document.getElementById("pause-btn");
+			const restartBtn = document.getElementById("restart-btn");
+			const progressBar = document.getElementById("progress-bar");
+			let timer;
+			let currentIndex = 0;
+			let isPlaying = false;
+
+			// Calculate total duration for progress bar
+			const totalDuration = poem.reduce((sum, phrase) => sum + phrase.delay, 0);
+
+			startBtn.addEventListener("click", startPoem);
+			pauseBtn.addEventListener("click", togglePause);
+			restartBtn.addEventListener("click", restartPoem);
+
+			function startPoem() {
+				startBtn.style.display = "none";
+				pauseBtn.style.display = "inline-block";
+				restartBtn.style.display = "inline-block";
+				isPlaying = true;
+				currentIndex = 0;
+				document.body.style.backgroundColor = "#1a1a1a";
+				displayPhrase();
+			}
+
+			function togglePause() {
+				if (isPlaying) {
+					clearTimeout(timer);
+					isPlaying = false;
+					pauseBtn.textContent = "Resume";
+					document.body.style.backgroundColor = "#2a2a2a";
+				} else {
+					isPlaying = true;
+					pauseBtn.textContent = "Pause";
+					document.body.style.backgroundColor = "#1a1a1a";
+					displayPhrase(currentIndex);
+				}
+			}
+
+			function restartPoem() {
+				clearTimeout(timer);
+				isPlaying = false;
+				currentIndex = 0;
+				phraseElement.textContent = "Press Start to begin";
+				progressBar.style.width = "0%";
+				startBtn.style.display = "inline-block";
+				pauseBtn.style.display = "none";
+				restartBtn.style.display = "none";
+				document.body.style.backgroundColor = "#1a1a1a";
+			}
+
+			function displayPhrase(index = 0) {
+				if (!isPlaying) return;
+
+				currentIndex = index;
+				if (index >= poem.length) {
+					phraseElement.textContent = "The End";
+					progressBar.style.width = "100%";
+					pauseBtn.style.display = "none";
+					isPlaying = false;
+					document.body.style.backgroundColor = "#2a2a2a";
+					return;
+				}
+
+				// Update display
+				phraseElement.textContent = poem[index].text;
+
+				// Calculate and update progress
+				const elapsed = poem
+					.slice(0, index)
+					.reduce((sum, phrase) => sum + phrase.delay, 0);
+				const progress = (elapsed / totalDuration) * 100;
+				progressBar.style.width = `${progress}%`;
+
+				// Change background color slightly for each phrase
+				const hue = (index * 30) % 360;
+				document.body.style.backgroundColor = `hsl(${hue}, 10%, 12%)`;
+
+				// Set timeout for next phrase
+				timer = setTimeout(() => {
+					displayPhrase(index + 1);
+				}, poem[index].delay);
+			}
+		</script>
 	</body>
 </html>
